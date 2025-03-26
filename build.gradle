@@ -19,6 +19,12 @@ model {
             architecture "x86_64"
         }
     }
+    toolChains {
+        gcc(Gcc) {
+            target("aarch64-linux")
+        }
+    }
+
 
     components {
         jpostal(NativeLibrarySpec) {
