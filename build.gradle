@@ -18,15 +18,10 @@ model {
         x64 {
             architecture "x86_64"
         }
-    }
-    toolchain {
-    if (System.getProperty('os.arch').contains('aarch64')) {
-        aarch64Linux {
-            cppCompiler.executable = "/usr/bin/aarch64-linux-gnu-g++"
+        arm64 { // Add this section for arm64
+            architecture "arm64"
         }
     }
-}
-
 
     components {
         jpostal(NativeLibrarySpec) {
@@ -48,6 +43,10 @@ model {
                 } else if (targetPlatform.operatingSystem.freeBSD) {
                     cCompiler.args '-I', "${jvmHome}/include"
                     cCompiler.args '-I', "${jvmHome}/include/freebsd"
+                } else if (targetPlatform.architecture.architecture == "arm64") { // Add this section for arm64
+                    cCompiler.args '-I', "${jvmHome}/include"
+                    cCompiler.args '-I', "${jvmHome}/include/linux"
+                    cCompiler.args '-D_FILE_OFFSET_BITS=64'
                 }
                 linker.args '-lpostal'  // Link with libpostal
             }
@@ -57,11 +56,9 @@ model {
 
 classes.dependsOn 'jpostalSharedLibrary'
 
-
 application {
     applicationDefaultJvmArgs = ["-Djava.library.path=" + file("${buildDir}/libs/jpostal/shared").absolutePath]
 }
-
 
 dependencies {
     testImplementation 'junit:junit:4.+'
