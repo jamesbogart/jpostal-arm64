@@ -19,11 +19,13 @@ model {
             architecture "x86_64"
         }
     }
-    toolChains {
-        gcc(Gcc) {
-            target("aarch64-linux")
+    toolchain {
+    if (System.getProperty('os.arch').contains('aarch64')) {
+        aarch64Linux {
+            cppCompiler.executable = "/usr/bin/aarch64-linux-gnu-g++"
         }
     }
+}
 
 
     components {
