@@ -14,24 +14,17 @@ sourceSets.main.java.srcDirs = ["src/main/java"]
 sourceSets.test.java.srcDirs = ["src/test/java"]
 
 model {
-    toolChains {
-        gcc(Gcc) {
-            if (targetPlatform.operatingSystem.linux) {
-                path "/usr/bin/gcc" // Replace with the actual path to your GCC executable
-                target("linux_aarch64") // Specify the target architecture
-            }
-        }
-    }
-
     platforms {
-        aarch64 {
-            architecture "aarch64"
+        x64 {
+            architecture "x86_64"
+        }
+        arm64 { // Add this section for arm64
+            architecture "arm64"
         }
     }
 
     components {
         jpostal(NativeLibrarySpec) {
-            targetPlatform = platforms.aarch64
             binaries.all {
                 def jvmHome = org.gradle.internal.jvm.Jvm.current().javaHome
                 if (targetPlatform.operatingSystem.macOsX) {
@@ -57,12 +50,13 @@ model {
     }
 }
 
-
 classes.dependsOn 'jpostalSharedLibrary'
+
 
 application {
     applicationDefaultJvmArgs = ["-Djava.library.path=" + file("${buildDir}/libs/jpostal/shared").absolutePath]
 }
+
 
 dependencies {
     testImplementation 'junit:junit:4.+'
