@@ -15,12 +15,6 @@ sourceSets.test.java.srcDirs = ["src/test/java"]
 
 model {
   toolChains {
-    // If you have both VC and Gcc installed, VC will be selected, unless you
-    // set 'vcDisable=true'
-    if (!vcDisable) {
-      visualCpp(VisualCpp) {
-      }
-    }
     clang(Clang)
     gcc(Gcc){
         target("linux_aarch64") {
