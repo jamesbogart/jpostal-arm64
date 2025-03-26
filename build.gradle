@@ -14,12 +14,28 @@ sourceSets.main.java.srcDirs = ["src/main/java"]
 sourceSets.test.java.srcDirs = ["src/test/java"]
 
 model {
+  toolChains {
+    // If you have both VC and Gcc installed, VC will be selected, unless you
+    // set 'vcDisable=true'
+    if (!vcDisable) {
+      visualCpp(VisualCpp) {
+      }
+    }
+    clang(Clang)
+    gcc(Gcc){
+        target("linux_aarch64") {
+           cppCompiler.executable = "/usr/bin/gcc"
+       }
+     }
+    
+  }
     platforms {
         x64 {
             architecture "x86_64"
         }
-        arm64 { // Add this section for arm64
+        linux_aarch64 {
             architecture "arm64"
+            operatingSystem "linux"
         }
     }
 
